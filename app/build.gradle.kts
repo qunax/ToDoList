@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    //kotlin("plugin.serialization") version "1.9.23"
 }
 
 android {
@@ -71,6 +72,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
     implementation("androidx.navigation:navigation-compose:2.5.3")
 
+    //implementation("androidx.compose.material:material-datepicker:1.0.5")
+    //implementation("androidx.compose.material:material-timepicker:1.0.5")
+
 
 
     //Hilt dependency
@@ -85,4 +89,14 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     // To use Kotlin annotation processing tool (kapt)
     ksp("androidx.room:room-compiler:$room_version")
+
+    //API calls retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+
+    //JSON converter
+    //ksp("com.squarep.moshi:moshi-kotlin-codegen:1.11.0")
+    //implementation("com.squareup.moshi:moshi:1.15.1")
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
+    implementation("com.squareup.retrofit2:converter-moshi:2.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 }

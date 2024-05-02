@@ -31,6 +31,12 @@ class AddEditTodoViewModel @Inject constructor(
     var description by mutableStateOf("")
         private set
 
+    var date by mutableStateOf("")
+        private set
+
+    var time by mutableStateOf("")
+        private set
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 

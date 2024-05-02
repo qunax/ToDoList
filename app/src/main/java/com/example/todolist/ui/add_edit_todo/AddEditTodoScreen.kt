@@ -1,5 +1,6 @@
 package com.example.todolist.ui.add_edit_todo
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,13 +20,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.todolist.util.UiEvent
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.TimePicker
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.todolist.ui.theme.ToDoListTheme
 
 @Composable
 fun AddEditTodoScreen(
     onPopBackStack: () -> Unit,
     viewModel: AddEditTodoViewModel = hiltViewModel()
 ){
-    //val scaffoldState = rememberScaffoldState()
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
@@ -42,10 +47,10 @@ fun AddEditTodoScreen(
         }
     }
     Scaffold(
-        //scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+
+        ,
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 viewModel.onEvent(AddEditTodoEvent.OnSaveTodoClick)
@@ -58,7 +63,10 @@ fun AddEditTodoScreen(
         }
     ) {internalPadding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(internalPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(internalPadding)
+                .padding(16.dp)
         ) {
             TextField(
                 value = viewModel.title,
@@ -83,6 +91,19 @@ fun AddEditTodoScreen(
                 singleLine = false,
                 maxLines = 5
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            TextField(
+                value = viewModel.date,
+                onValueChange = { viewModel.onEvent(AddEditTodoEvent.OnDescriptionChange(it)) },
+                label = { Text("Date") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            TextField(
+                value = viewModel.time,
+                onValueChange = { viewModel.onEvent(AddEditTodoEvent.OnDescriptionChange(it)) },
+                label = { Text("Time") }
+            )
+
         }
     }
 }

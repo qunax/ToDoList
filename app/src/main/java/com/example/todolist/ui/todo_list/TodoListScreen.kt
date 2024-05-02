@@ -1,5 +1,8 @@
 package com.example.todolist.ui.todo_list
 
+import android.os.Build
+import androidx.annotation.RequiresExtension
+import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,14 +24,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun TodoListScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
     viewModel: TodoListViewModel = hiltViewModel()
 ){
     val todos = viewModel.todos.collectAsState(initial = emptyList())
+    //val backgroundColor = viewModel.backgroundColor.collectAsState()
     //val scaffoldState = rememberScaffoldState()
     val snackbarHostState = remember {SnackbarHostState()}
     LaunchedEffect(key1 = true){
@@ -61,10 +67,12 @@ fun TodoListScreen(
                                    )
                                }
         }
+
     ) { innerPadding ->
         LazyColumn(modifier = Modifier
             .padding(innerPadding)
             .fillMaxSize()
+            .background(Color(android.graphics.Color.parseColor(viewModel.backgroundColor)))
         ){
             items(todos.value){todo -> 
                 TodoItem(

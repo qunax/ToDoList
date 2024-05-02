@@ -10,5 +10,6 @@ data class Todo(
     val title: String,
     val description: String?,
     val isDone: Boolean,
-    val doTillDateTime: String? = null
+    val date: String = "",
+    val time: String = ""
 )

@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.room.Room
 import com.example.todolist.data.data_source.TodoDatabase
 import com.example.todolist.data.repository.TodoRepositoryImpl
+import com.example.todolist.data.repository.UiConfigRepositoryImpl
 import com.example.todolist.domain.repository.TodoRepository
+import com.example.todolist.domain.repository.UiConfigRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,6 +26,12 @@ class AppModule {
             "todo_db"
         ).build()
     }
+
+//    @Provides
+//    @Singleton
+//    fun provideUiConfigRepository() : UiConfigRepository{
+//        return UiConfigRepositoryImpl()
+//    }
 
     @Provides
     @Singleton
