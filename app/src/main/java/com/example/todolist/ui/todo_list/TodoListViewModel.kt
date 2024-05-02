@@ -3,14 +3,14 @@ package com.example.todolist.ui.todo_list
 import android.net.http.HttpException
 import android.os.Build
 import androidx.annotation.RequiresExtension
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todolist.data.data_source.ApiService
 import com.example.todolist.data.data_source.TodoApi
-import com.example.todolist.domain.model.ColorsApiResponse
 import com.example.todolist.domain.model.Todo
 import com.example.todolist.domain.repository.TodoRepository
-import com.example.todolist.domain.repository.UiConfigRepository
 import com.example.todolist.util.Routes
 import com.example.todolist.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,8 +26,7 @@ import javax.inject.Inject
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @HiltViewModel
 class TodoListViewModel @Inject constructor(
-    private val todoRepository: TodoRepository,
-    //private val uiConfigRepository: UiConfigRepository
+    private val todoRepository: TodoRepository
 ) : ViewModel() {
     val mutex1 = Mutex()
     val mutex2 = Mutex()
@@ -35,7 +34,8 @@ class TodoListViewModel @Inject constructor(
 
     val todos = todoRepository.getAllTodos()
 
-    var backgroundColor = "#ffffff"
+    var backgroundColor by mutableStateOf("#ffffff")
+        private set
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
