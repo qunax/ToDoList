@@ -1,5 +1,9 @@
 package com.example.todolist.ui.add_edit_todo
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,14 +27,21 @@ import com.example.todolist.util.UiEvent
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.TimePicker
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat.getSystemService
+import com.example.todolist.Notification
+import com.example.todolist.notificationID
 import com.example.todolist.ui.theme.ToDoListTheme
+
+
 
 @Composable
 fun AddEditTodoScreen(
     onPopBackStack: () -> Unit,
     viewModel: AddEditTodoViewModel = hiltViewModel()
 ){
+    val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
@@ -54,6 +65,7 @@ fun AddEditTodoScreen(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 viewModel.onEvent(AddEditTodoEvent.OnSaveTodoClick)
+                //scheduleNotification(context)
             }) {
                 Icon(
                     imageVector = Icons.Default.Check,

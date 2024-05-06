@@ -23,6 +23,7 @@ class MainActivity(
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val service = CounterNotificationService(applicationContext)
         setContent {
             ToDoListTheme {
                 MaterialTheme(){
