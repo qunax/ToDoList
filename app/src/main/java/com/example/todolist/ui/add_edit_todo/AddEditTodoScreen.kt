@@ -30,8 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat.getSystemService
-import com.example.todolist.Notification
-import com.example.todolist.notificationID
 import com.example.todolist.ui.theme.ToDoListTheme
 
 
@@ -64,8 +62,7 @@ fun AddEditTodoScreen(
         ,
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                viewModel.onEvent(AddEditTodoEvent.OnSaveTodoClick)
-                //scheduleNotification(context)
+                viewModel.onEvent(AddEditTodoEvent.OnSaveTodoClick(context))
             }) {
                 Icon(
                     imageVector = Icons.Default.Check,
@@ -106,14 +103,18 @@ fun AddEditTodoScreen(
             Spacer(modifier = Modifier.height(8.dp))
             TextField(
                 value = viewModel.date,
-                onValueChange = { viewModel.onEvent(AddEditTodoEvent.OnDescriptionChange(it)) },
-                label = { Text("Date") }
+                onValueChange = {
+                    viewModel.onEvent(AddEditTodoEvent.OnDateChange(it))
+                                },
+                label = { Text("Date in format \"dd/MM/yyyy\"") }
             )
             Spacer(modifier = Modifier.height(8.dp))
             TextField(
                 value = viewModel.time,
-                onValueChange = { viewModel.onEvent(AddEditTodoEvent.OnDescriptionChange(it)) },
-                label = { Text("Time") }
+                onValueChange = {
+                    viewModel.onEvent(AddEditTodoEvent.OnTimeChange(it))
+                                },
+                label = { Text("Time in format \"HH:mm\"") }
             )
 
         }

@@ -1,7 +1,7 @@
 package com.example.todolist.ui.add_edit_todo
 
-import android.app.PendingIntent
-import android.content.Intent
+import android.app.Application
+import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -16,9 +16,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
-import com.example.todolist.Notification
-
-//import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import com.example.todolist.work.ReminderWorker
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.concurrent.TimeUnit
 
 
 @HiltViewModel
@@ -41,6 +46,7 @@ class AddEditTodoViewModel @Inject constructor(
     var time by mutableStateOf("")
         private set
 
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
@@ -53,6 +59,8 @@ class AddEditTodoViewModel @Inject constructor(
                 repository.getTodoById(todoId!!)?.let{todoFromDb ->
                     title = todoFromDb.title
                     description = todoFromDb.description ?: ""
+                    date = todoFromDb.date
+                    time = todoFromDb.time
                     todo  = todoFromDb
                 }
             }
@@ -69,23 +77,15 @@ class AddEditTodoViewModel @Inject constructor(
             is AddEditTodoEvent.OnDescriptionChange -> {
                 description = event.description
             }
+            is AddEditTodoEvent.OnDateChange -> {
+                date = event.date
+            }
+            is AddEditTodoEvent.OnTimeChange -> {
+                time = event.time
+            }
             is AddEditTodoEvent.OnSaveTodoClick -> {
                 viewModelScope.launch {
-                    if(title.isNotBlank()){
-                        repository.insertTodo(
-                            Todo(
-                                title = title,
-                                description = description,
-                                isDone = todo?.isDone ?: false,
-                                id = todo?.id
-                            )
-                        )
-                        viewModelScope.launch {
-                            _uiEvent.send(
-                                UiEvent.PopBackStack
-                            )
-                        }
-                    } else {
+                    if(title.isBlank()){
                         viewModelScope.launch {
                             _uiEvent.send(
                                 UiEvent.ShowSnackbar(
@@ -95,11 +95,55 @@ class AddEditTodoViewModel @Inject constructor(
                         }
                         return@launch
                     }
+
+                    repository.insertTodo(
+                        Todo(
+                            title = title,
+                            description = description,
+                            date = date,
+                            time = time,
+                            isDone = todo?.isDone ?: false,
+                            id = todo?.id
+                        )
+                    )
+                    if(date.isNotBlank() && time.isNotBlank()){
+                        ScheduleLocalNotification(event.context)
+                    }
+
+                    viewModelScope.launch {
+                        _uiEvent.send(
+                            UiEvent.PopBackStack
+                        )
+                    }
                 }
             }
         }
     }
 
 
+    fun ScheduleLocalNotification(context: Context) {
+        val application = context.applicationContext as Application
+        val workManager = WorkManager.getInstance(application)
 
+        val myWorkRequestBuilder = OneTimeWorkRequestBuilder<ReminderWorker>()
+        myWorkRequestBuilder.setInputData(
+            workDataOf(
+                "NAME" to title,
+                "MESSAGE" to description
+            )
+        )
+        val durationInSeconds = GetDurationFromNow().seconds
+        myWorkRequestBuilder.setInitialDelay(durationInSeconds, TimeUnit.SECONDS)
+        workManager.enqueue(myWorkRequestBuilder.build())
+    }
+
+
+    fun GetDurationFromNow() : Duration {
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        val timeToNotify = LocalDateTime.parse(date + " " + time, formatter)
+        val timeNow = LocalDateTime.now()
+
+        val durationDiff = Duration.between(timeNow, timeToNotify)
+        return durationDiff
+    }
 }

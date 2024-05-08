@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
-        android:name=".TodoApp"
+        android:name=".base.BaseApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,13 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ToDoList"
         tools:targetApi="31">
-        <receiver android:name=".Notification"
-            android:enabled="true"/>
-        <activity
-            android:name=".TestActivity"
-            android:exported="false"
-            android:label="@string/title_activity_test"
-            android:theme="@style/Theme.ToDoList" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
