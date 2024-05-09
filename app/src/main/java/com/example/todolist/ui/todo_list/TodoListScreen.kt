@@ -35,7 +35,6 @@ fun TodoListScreen(
 ){
     val todos = viewModel.todos.collectAsState(initial = emptyList())
     //val backgroundColor = viewModel.backgroundColor.collectAsState()
-    //val scaffoldState = rememberScaffoldState()
     val snackbarHostState = remember {SnackbarHostState()}
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{event ->
@@ -72,7 +71,7 @@ fun TodoListScreen(
         LazyColumn(modifier = Modifier
             .padding(innerPadding)
             .fillMaxSize()
-            .background(Color(android.graphics.Color.parseColor(viewModel.backgroundColor)))
+            //.background(Color(android.graphics.Color.parseColor(viewModel.backgroundColor)))
         ){
             items(todos.value){todo -> 
                 TodoItem(

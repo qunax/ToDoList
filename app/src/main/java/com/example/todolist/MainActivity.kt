@@ -42,6 +42,7 @@ class MainActivity(
             ToDoListTheme {
                 MaterialTheme(){
                     val navController = rememberNavController()
+
                     NavHost(
                         navController = navController,
                         startDestination = Routes.TODO_LIST
@@ -70,6 +71,12 @@ class MainActivity(
                                     navController.popBackStack()
                                 }
                             )
+                        }
+
+                        composable(
+                            route = Routes.PRODUCTIVITY_HELPERS
+                        ) {
+
                         }
                     }
                 }
